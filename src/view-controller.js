@@ -2,7 +2,7 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable import/extensions */
 import {
-  signIn, logIn, googleLogin, facebookLogin, signOut, addNote, deleteNote, saveUsers, countLove,
+  signIn, logIn, googleLogin, facebookLogin, signOut, addNote, deleteNote, saveUsers, editNote,
 } from './controller/controller-firebase.js';
 
 const changeHash = (hash) => {
@@ -69,9 +69,15 @@ export const addNoteOnSubmit = (event) => {
       });
   }
 };
-
-export const deleteNoteOnClick = (objNote) => deleteNote(objNote.id);
-export const reactionLoveOnClick = (objNote) => {
-  let numbersOfLove = document.querySelector('#reaction-love');
-  numbersOfLove.innerHTML = countLove(objNote.id, objNote.love);
+export const editNoteOnSubmit = (objNote) => {
+  const input = document.getElementById('input-edit-note');
+  editNote(input.value, objNote)
+    .then(() => {
+      console.log('Document successfully updated');
+      //  data.message = 'Nota agregada';
+    }).catch((error) => {
+      console.error('Error updating document: ', error);
+      //  data.message = 'Lo sentimos, no se pudo agregar la nota';
+    });
 };
+export const deleteNoteOnClick = (objNote) => deleteNote(objNote.id);

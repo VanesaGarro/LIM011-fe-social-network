@@ -1,6 +1,8 @@
 /* eslint-disable import/named */
 /* eslint-disable import/extensions */
-import { signOutSubmit, addNoteOnSubmit, deleteNoteOnClick ,reactionLoveOnClick} from '../view-controller.js';
+import {
+  signOutSubmit, addNoteOnSubmit, deleteNoteOnClick, editNoteOnSubmit,
+} from '../view-controller.js';
 
 const itemNote = (objNote) => {
   const user = firebase.auth().currentUser;
@@ -8,7 +10,9 @@ const itemNote = (objNote) => {
   divElement.innerHTML = `
     <div class="container-post">
     <div class="btn-post">
-    <span id="btn-deleted-${objNote.id}">${user.uid === objNote.uid ? '<img id="trash" src="imagenes/delete.png" />' : ''}</span>
+    <span id="btn-deleted-${objNote.id}">${user.uid === objNote.uid ? '<img id="trash" src="imagenes/delete.png" title="Eliminar"/>' : ''}</span>
+    
+    <span id="btn-pen-${objNote.id}">${user.uid === objNote.uid ? '<img id="btn-pen" src="imagenes/edit-button.svg" title="Editar"/>' : ''}</span>
     </div>
       <div class="photo-avatar">
         <p>${objNote.avatar === null ? '<img src="../imagenes/user.svg" class="avatar-usuario">' : `<img src="${objNote.avatar}" class="avatar-usuario">`}</p>
@@ -17,7 +21,7 @@ const itemNote = (objNote) => {
         <p id ="date-post">${objNote.date.toDate()}</p>
       </div>
         </div>
-      <section class="texto-post">
+        <section class="texto-post" id="texto-post-${objNote.id}">
         <p>${objNote.title}</p>
         </section>
         <div class = "reactions">
@@ -25,15 +29,34 @@ const itemNote = (objNote) => {
         </div>
     </div>
   `;
+  divElement.querySelector(`#btn-pen-${objNote.id}`)
+    .addEventListener('click', () => {
+      const post = document.querySelector(`#texto-post-${objNote.id}`);
+      post.innerHTML = `
+    <div class="">
+      <textarea id="input-edit-note"></textarea>
+      <button id="btn-edit-${objNote.id}">Guardar cambios</button>
+    </div>
+    `;
+      console.log(post.querySelector(`#btn-edit-${objNote.id}`));
+      post.querySelector(`#btn-edit-${objNote.id}`)
+        .addEventListener('click', () => editNoteOnSubmit(objNote));
+      // divElement.querySelector(`#btn-edit-${objNote.id}`).style.display = 'block';
+      return post;
+    });
 
   // agregando evento de click al btn eliminar una nota
   divElement.querySelector(`#btn-deleted-${objNote.id}`)
     .addEventListener('click', () => deleteNoteOnClick(objNote));
+  /* divElement.querySelector(`#btn-edit-${objNote.id}`)
+  .addEventListener('click', () => editNoteOnSubmit(objNote)); */
+
   return divElement;
 };
 
 export default (notes) => {
   const home = document.createElement('div');
+  home.classList.add('home-style');
   const user = firebase.auth().currentUser;
   const formContent = `
     <nav>

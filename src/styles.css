@@ -1,5 +1,7 @@
 body {
   margin: 0;
+}
+.home-style{
   background-image: url(./imagenes/fondo-fitness.jpg);
 }
 
