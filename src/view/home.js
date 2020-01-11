@@ -1,12 +1,14 @@
 /* eslint-disable import/named */
 /* eslint-disable import/extensions */
 import {
-  signOutSubmit, addNoteOnSubmit, deleteNoteOnClick, editNoteOnSubmit,
+  signOutSubmit, addNoteOnSubmit, deleteNoteOnClick, editNoteOnSubmit, countLoveOnClick,addCommentOnSubmit,
 } from '../view-controller.js';
 
 const itemNote = (objNote) => {
   const user = firebase.auth().currentUser;
   const divElement = document.createElement('div');
+  console.log(objNote);
+  
   divElement.innerHTML = `
     <div class="container-post">
     <div class="btn-post">
@@ -17,15 +19,19 @@ const itemNote = (objNote) => {
       <div class="photo-avatar">
         <p>${objNote.avatar === null ? '<img src="../imagenes/user.svg" class="avatar-usuario">' : `<img src="${objNote.avatar}" class="avatar-usuario">`}</p>
         <div class="date">
-        <p id ="nombre-usuario">Publicado por ${objNote.usuario}</p>
-        <p id ="date-post">${objNote.date.toDate()}</p>
-      </div>
+          <p id ="nombre-usuario">Publicado por ${objNote.user}</p>
+          <p id ="date-post">${objNote.date.toDate()}</p>
         </div>
-        <section class="texto-post" id="texto-post-${objNote.id}">
+      </div>
+      <section class="texto-post" id="texto-post-${objNote.id}">
         <p>${objNote.title}</p>
-        </section>
-        <div class = "reactions">
-        <p id ="reaction-love">${objNote.love} </p> <img src="https://purepng.com/public/uploads/medium/heart-icon-s4k.png" id="love" />
+      </section>
+      <div class = "reactions">
+        <span id ="reaction-love">${objNote.love} </span> <img src="https://purepng.com/public/uploads/medium/heart-icon-s4k.png" id="love" />
+        </div>
+        <div class = "comments">
+        <textarea id="input-comment-note" placeholder="Escribir un comentario..."></textarea> 
+        <span id="btn-add-${objNote.id}"><img id="btn-add" src="imagenes/plus.png" title="agregar"/></span>
         </div>
     </div>
   `;
@@ -45,11 +51,34 @@ const itemNote = (objNote) => {
       return post;
     });
 
+  // divElement.querySelector(`#btn-edit-${objNote.id}`).style.display = 'none';
+
+  divElement.querySelector(`#btn-pen-${objNote.id}`)
+    .addEventListener('click', () => {
+      const post = document.querySelector(`#texto-post-${objNote.id}`);
+      post.innerHTML = `
+      <div class="">
+        <textarea id="input-edit-note"></textarea>
+        <button id="btn-edit-${objNote.id}">Guardar cambios</button>
+      </div>
+      `;
+      console.log(post.querySelector(`#btn-edit-${objNote.id}`));
+      post.querySelector('#input-edit-note').value = objNote.title;
+      post.querySelector(`#btn-edit-${objNote.id}`)
+        .addEventListener('click', () => editNoteOnSubmit(objNote));
+      return post;
+    });
+
+  // agregando evento click al btn love
+  divElement.querySelector('#love')
+    .addEventListener('click', () => countLoveOnClick(objNote));
+
   // agregando evento de click al btn eliminar una nota
   divElement.querySelector(`#btn-deleted-${objNote.id}`)
     .addEventListener('click', () => deleteNoteOnClick(objNote));
-  /* divElement.querySelector(`#btn-edit-${objNote.id}`)
-  .addEventListener('click', () => editNoteOnSubmit(objNote)); */
+
+    divElement.querySelector(`#btn-add-${objNote.id}`)
+    .addEventListener('click', () => addCommentOnSubmit(objNote));
 
   return divElement;
 };
@@ -73,12 +102,17 @@ export default (notes) => {
         
         </div>
         <div class="info-usuario"> 
-        <p><img src="${user.photoURL}" class="foto-usuario"></p>
-        <h3 id ="nombre-usuario">${user.displayName}</h3>
+        <img src="${user.photoURL}" class="foto-usuario">
+        <div><h3 id ="nombre-usuario">${user.displayName}</h3></div>
         </div>
       </figure>
       <main>
         <textarea name="" id="input-new-note" rows="4" cols="50" placeholder="¿Que quieres compartir?"></textarea>
+      <!-- post privacy -->
+        <select id="privacy"> 
+        <option value="public"> Público </option>
+        <option value="private"> Privado </option>
+        </select>
         <section id="botones-post">
         <button id="btn-subir-img"> imagen </button>
         <button type="button" id="btn-add-note">Publicar</button>
@@ -93,7 +127,6 @@ export default (notes) => {
   `;
 
   home.innerHTML = formContent;
-
   const btnLogOut = home.querySelector('#btn-cerrar');
   btnLogOut.addEventListener('click', signOutSubmit);
   const buttonAddNote = home.querySelector('#btn-add-note');

@@ -2,7 +2,8 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable import/extensions */
 import {
-  signIn, logIn, googleLogin, facebookLogin, signOut, addNote, deleteNote, saveUsers, editNote,
+  signIn, logIn, googleLogin, facebookLogin, signOut,
+  addNote,addComment, deleteNote, saveUsers, editNote, countLove,
 } from './controller/controller-firebase.js';
 
 const changeHash = (hash) => {
@@ -54,18 +55,18 @@ export const signOutSubmit = () => {
 export const addNoteOnSubmit = (event) => {
   event.preventDefault();
   const input = document.getElementById('input-new-note');
+  const select = document.getElementById('privacy');
   if (input.value === '') {
     alert('Campos vacíos');
   } else {
-    addNote(input.value)
+    addNote(input.value, select.value)
       .then((docRef) => {
         input.value = '';
         console.log('Document written with ID: ', docRef.id);
-      //  data.message = 'Nota agregada';
+        console.log(docRef.id);
       }).catch((error) => {
         input.value = '';
         console.error('Error adding document: ', error);
-      //  data.message = 'Lo sentimos, no se pudo agregar la nota';
       });
   }
 };
@@ -80,4 +81,23 @@ export const editNoteOnSubmit = (objNote) => {
       //  data.message = 'Lo sentimos, no se pudo agregar la nota';
     });
 };
+export const addCommentOnSubmit = (objNote) => {
+  const inputComment = document.getElementById('input-comment-note');
+  if (inputComment.value === '') {
+    alert('Campos vacíos');
+  } else {
+  addComment(inputComment.value, objNote)
+    .then(() => {
+      console.log('Document successfully updated');
+      //  data.message = 'Nota agregada';
+    }).catch((error) => {
+      console.error('Error updating document: ', error);
+      //  data.message = 'Lo sentimos, no se pudo agregar la nota';
+    });
+}};
 export const deleteNoteOnClick = (objNote) => deleteNote(objNote.id);
+
+export const countLoveOnClick = (objNote) => {
+   const i = +1;
+      countLove(objNote, i);
+   }
