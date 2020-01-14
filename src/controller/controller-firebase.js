@@ -54,13 +54,6 @@ export const getNotes = (callback) => firebase.firestore().collection('notes').o
     callback(dato);
   });
 
-export const countLove = (objNote) => firebase.firestore().collection('notes').doc(objNote.id).update({
-  love: firebase.firestore.FieldValue.increment(1),
-  lovers: objNote.lovers.concat({
-    user: firebase.auth().currentUser.displayName,
-    uidlover: firebase.auth().currentUser.uid,
-  }),
-});
 export const addComment = (textComment, objNote) => firebase.firestore().collection('notes').doc(objNote.id).update({
   comments: objNote.comments.concat({
     uidComment: firebase.auth().currentUser.uid,
@@ -70,3 +63,24 @@ export const addComment = (textComment, objNote) => firebase.firestore().collect
     dateComment: firebase.firestore.Timestamp.fromDate(new Date()),
   }),
 });
+
+export const countLove = (objNote) => {
+  const user = firebase.auth().currentUser;
+  firebase.firestore().collection('notes').doc(objNote.id).update({
+    love: firebase.firestore.FieldValue.increment(1),
+    lovers: objNote.lovers.concat([
+      {
+        user: user.displayName,
+        uid: user.uid,
+      },
+    ]),
+  });
+};
+
+export const dislike = (objNote) => {
+  const user = firebase.auth().currentUser;
+  firebase.firestore().collection('notes').doc(objNote.id).update({
+    love: firebase.firestore.FieldValue.increment(-1),
+    lovers: objNote.lovers.filter((element) => element.uid !== user.uid),
+  });
+};
