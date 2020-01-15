@@ -109,3 +109,10 @@ export const countLoveOnClick = (objNote) => {
     countLove(objNote);
   }
 };
+
+export const deleteCommentsOnClick = (objNote) => {
+  const input = document.querySelector('#element-comment');
+  console.log(input.textContent);
+  console.log(objNote);
+  // deleteComments(objNote, input.textContent);
+};

@@ -84,3 +84,9 @@ export const dislike = (objNote) => {
     lovers: objNote.lovers.filter((element) => element.uid !== user.uid),
   });
 };
+
+export const deleteComments = (objNote, input) => {
+  firebase.firestore().collection('notes').doc(objNote.id).update({
+    comments: objNote.comments.filter((element) => element.comment !== input),
+  });
+};
