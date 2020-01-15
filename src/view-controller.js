@@ -3,7 +3,7 @@
 /* eslint-disable import/extensions */
 import {
   signIn, logIn, googleLogin, facebookLogin, signOut,
-  addNote, addComment, deleteNote, saveUsers, editNote, countLove, dislike,
+  addNote, addComment, deleteNote, saveUsers, editNote, countLove, dislike, deleteComments,
 } from './controller/controller-firebase.js';
 
 const changeHash = (hash) => {
@@ -110,9 +110,6 @@ export const countLoveOnClick = (objNote) => {
   }
 };
 
-export const deleteCommentsOnClick = (objNote) => {
-  const input = document.querySelector('#element-comment');
-  console.log(input.textContent);
-  console.log(objNote);
-  // deleteComments(objNote, input.textContent);
+export const deleteCommentsOnClick = (objNote, i) => {
+  deleteComments(objNote, i);
 };

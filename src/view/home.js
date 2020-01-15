@@ -22,7 +22,7 @@ const itemNote = (objNote) => {
           <p id ="date-post">${objNote.date.toDate()}</p>
         </div>
       </div>
-      <section class="texto-post" id="texto-post-${objNote.id}">
+      <section  id="texto-post-${objNote.id}">
         <p>${objNote.title}</p>
       </section>
       <div class = "reactions">
@@ -30,25 +30,35 @@ const itemNote = (objNote) => {
         <span id="btn-comment-${objNote.id}">'<img id="btn-comment" src="imagenes/comment.png" title="comentar"/></span> 
         </div>
         </div>
-        <ul id="aca-se-pega"></ul>
+        <ul id="container-comment"></ul>
         <div class = "comments">
+        
           <div id = "comments-${objNote.id}">
           </div>
         </div>
   `;
   // Mostrando cada comentario de cada post
-  objNote.comments.forEach((element) => {
-    const ul = divElement.querySelector('#aca-se-pega');
+  objNote.comments.forEach((element, index) => {
+    const ul = divElement.querySelector('#container-comment');
     const liElement = document.createElement('li');
     liElement.innerHTML = `
-      <img src="${element.photoUserComment}" class="avatar-usuario">
-      <span>${element.userComment}</span>
-      <span id="btn-deleted-${element.uidComment}">${user.uid === element.uidComment || user.uid === objNote.uid ? '<img id="trash" src="imagenes/remove.png" title="Eliminar"/>' : ''}</span>
+    <div class="btn-post">
+    <span id="btn-deleted-${index}">${user.uid === element.uidComment || user.uid === objNote.uid ? '<img id="trash" src="imagenes/remove-comment.png" title="Eliminar"/>' : ''}</span>
+    </div>
+    <div class="photo-avatar">
+      <img src="${element.photoUserComment}" class="avatar-usuario-comment">
+      <div class="date">
+      <span>${element.userComment} ha comentado: </span>
+      <p id="date-comment">${element.dateComment.toDate()}</p>
+      </div>
+      </div>
+      <section>
       <p id="element-comment">${element.comment}</p>
+      </section>
     `;
     ul.appendChild(liElement);
-    liElement.querySelector(`#btn-deleted-${element.uidComment}`)
-      .addEventListener('click', () => deleteCommentsOnClick(objNote));
+    liElement.querySelector(`#btn-deleted-${index}`)
+      .addEventListener('click', () => deleteCommentsOnClick(objNote, index));
   });
 
   // agregando evento click al btn pen para editar
@@ -99,7 +109,7 @@ export default (notes) => {
   const user = firebase.auth().currentUser;
   const formContent = `
     <nav>
-      <ul>
+      <ul id = "navbar">
         <li><a id="btn-profile">Perfil</a></li>
         <li><a id="btn-home">Inicio</a></li>
         <li><a id="btn-cerrar">Cerrar sesión</a></li>
