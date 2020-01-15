@@ -16,10 +16,10 @@ const itemNote = (objNote) => {
     <span id="btn-pen-${objNote.id}">${user.uid === objNote.uid ? '<img id="btn-pen" src="imagenes/pencil.png" title="Editar"/>' : ''}</span>
     </div>
       <div class="photo-avatar">
-        <p>${objNote.avatar === null ? '<img src="../imagenes/user.svg" class="avatar-usuario">' : `<img src="${objNote.avatar}" class="avatar-usuario">`}</p>
+        <p>${objNote.avatar === null ? '<img src="imagenes/user.png" class="avatar-usuario">' : `<img src="${objNote.avatar}" class="avatar-usuario">`}</p>
         <div class="date">
-          <p id ="nombre-usuario">Publicado por ${objNote.user}</p>
-          <p id ="date-post">${objNote.date.toDate()}</p>
+        <p>${objNote.user === null ?`<p id ="nombre-usuario">Publicado por ${objNote.email}</p>`: `<p id ="nombre-usuario">Publicado por ${objNote.user}</p> `}</p>
+        <p id ="date-post">${objNote.date.toDate()}</p>
         </div>
       </div>
       <section  id="texto-post-${objNote.id}">
@@ -122,8 +122,8 @@ export default (notes) => {
         
         </div>
         <div class="info-usuario"> 
-        <img src="${user.photoURL}" class="foto-usuario">
-        <div><h3 class ="user-prof-name">${user.displayName}</h3></div>
+        <p>${user.photoURL === null ? '<img src="imagenes/user.png" class="avatar-usuario">' : `<img src="${user.photoURL}" class="avatar-usuario">`}</p>
+        <div>${user.displayName === null ?`<h3 class ="user-prof-name">${user.email}</h3>`: `<h3 class ="user-prof-name">${user.displayName}</h3> `}</div>
         </div>
       </figure>
       <main>

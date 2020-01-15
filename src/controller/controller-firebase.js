@@ -26,6 +26,7 @@ export const signOut = () => firebase.auth().signOut();
 export const addNote = (textNewNote, selectPrivacy) => firebase.firestore().collection('notes').add({
   title: textNewNote,
   user: firebase.auth().currentUser.displayName,
+  email: firebase.auth().currentUser.email,
   avatar: firebase.auth().currentUser.photoURL,
   uid: firebase.auth().currentUser.uid,
   date: firebase.firestore.Timestamp.fromDate(new Date()),

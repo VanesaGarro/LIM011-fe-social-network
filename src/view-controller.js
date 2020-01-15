@@ -37,7 +37,8 @@ export const logInOnSubmit = () => {
   const email = document.querySelector('#email-login').value;
   const password = document.querySelector('#password-login').value;
   logIn(email, password)
-    .then(() => changeHash('/Home'))
+    .then(() => changeHash('/Home'),
+     saveUsers())
     .catch((error) => {
       const errorMessage = error.message;
       alert(errorMessage);
