@@ -29,7 +29,7 @@ export const addNote = (textNewNote, selectPrivacy) => firebase.firestore().coll
   email: firebase.auth().currentUser.email,
   avatar: firebase.auth().currentUser.photoURL,
   uid: firebase.auth().currentUser.uid,
-  date: firebase.firestore.Timestamp.fromDate(new Date()),
+  date: new Date(),
   privacy: selectPrivacy,
   love: 0,
   lovers: [],
